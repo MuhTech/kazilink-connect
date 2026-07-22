@@ -68,7 +68,7 @@ function JobsPage() {
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
-    void nav({ search: (prev) => ({ ...prev, q: q || undefined }) });
+    void nav({ search: (prev: z.infer<typeof searchSchema>) => ({ ...prev, q: q || undefined }) });
   };
 
   const jobs = jobsQ.data ?? [];
@@ -84,7 +84,7 @@ function JobsPage() {
           <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder={t.jobs.search} />
           <Select
             value={search.category ?? "__all__"}
-            onValueChange={(v) => nav({ search: (p) => ({ ...p, category: v === "__all__" ? undefined : v }) })}
+            onValueChange={(v) => nav({ search: (p: z.infer<typeof searchSchema>) => ({ ...p, category: v === "__all__" ? undefined : v }) })}
           >
             <SelectTrigger className="w-[180px]"><SelectValue placeholder={t.jobs.filterCategory} /></SelectTrigger>
             <SelectContent>
@@ -94,7 +94,7 @@ function JobsPage() {
           </Select>
           <Select
             value={search.type ?? "__all__"}
-            onValueChange={(v) => nav({ search: (p) => ({ ...p, type: v === "__all__" ? undefined : v }) })}
+            onValueChange={(v) => nav({ search: (p: z.infer<typeof searchSchema>) => ({ ...p, type: v === "__all__" ? undefined : v }) })}
           >
             <SelectTrigger className="w-[180px]"><SelectValue placeholder={t.jobs.filterType} /></SelectTrigger>
             <SelectContent>
@@ -107,7 +107,7 @@ function JobsPage() {
           <label className="flex items-center gap-2 rounded-md border px-3 text-sm">
             <Checkbox
               checked={!!search.remote}
-              onCheckedChange={(c) => nav({ search: (p) => ({ ...p, remote: c ? true : undefined }) })}
+              onCheckedChange={(c) => nav({ search: (p: z.infer<typeof searchSchema>) => ({ ...p, remote: c ? true : undefined }) })}
             />
             {t.jobs.filterRemote}
           </label>
