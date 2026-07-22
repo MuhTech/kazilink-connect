@@ -26,11 +26,18 @@ function Applicants() {
 
   const appsQ = useQuery({
     queryKey: ["applicants", id],
-    queryFn: async () => (await supabase
-      .from("applications")
-      .select("id, status, applied_at, cover_letter, resume_path, profiles!applications_applicant_id_fkey(full_name, headline, location, phone)")
-      .eq("job_id", id)
-      .order("applied_at", { ascending: false })).data ?? [],
+    queryFn: async () => {
+      const { data: apps } = await supabase
+        .from("applications")
+        .select("id, status, applied_at, cover_letter, resume_path, applicant_id")
+        .eq("job_id", id)
+        .order("applied_at", { ascending: false });
+      if (!apps?.length) return [];
+      const ids = Array.from(new Set(apps.map(a => a.applicant_id)));
+      const { data: profs } = await supabase.from("profiles").select("id, full_name, headline, location, phone").in("id", ids);
+      const byId = new Map((profs ?? []).map(p => [p.id, p]));
+      return apps.map(a => ({ ...a, profile: byId.get(a.applicant_id) }));
+    },
   });
 
   const updateStatus = async (appId: string, status: typeof STATUSES[number]) => {
@@ -57,8 +64,8 @@ function Applicants() {
             <div key={a.id} className="rounded-lg border bg-card p-4">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <div className="font-semibold">{a.profiles?.full_name ?? "Anonymous"}</div>
-                  <div className="text-xs text-muted-foreground">{a.profiles?.headline} · {a.profiles?.location}</div>
+                  <div className="font-semibold">{a.profile?.full_name ?? "Anonymous"}</div>
+                  <div className="text-xs text-muted-foreground">{a.profile?.headline} · {a.profile?.location}</div>
                   <div className="mt-1 text-xs text-muted-foreground">Applied {new Date(a.applied_at).toLocaleString()}</div>
                 </div>
                 <div className="flex items-center gap-2">
