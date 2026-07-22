@@ -36,6 +36,7 @@ const dict = {
 } as const;
 
 type Dict = typeof dict.en;
+const dicts: Record<Lang, Dict> = dict as unknown as Record<Lang, Dict>;
 
 const LangCtx = createContext<{ lang: Lang; setLang: (l: Lang) => void; t: Dict }>({
   lang: "en",
@@ -53,7 +54,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     setLangState(l);
     if (typeof window !== "undefined") localStorage.setItem("kazilink.lang", l);
   };
-  return <LangCtx.Provider value={{ lang, setLang, t: dict[lang] }}>{children}</LangCtx.Provider>;
+  return <LangCtx.Provider value={{ lang, setLang, t: dicts[lang] }}>{children}</LangCtx.Provider>;
 }
 
 export function useT() {
