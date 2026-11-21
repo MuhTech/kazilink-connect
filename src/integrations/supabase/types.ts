@@ -213,6 +213,98 @@ export type Database = {
           },
         ]
       }
+      external_jobs: {
+        Row: {
+          apply_url: string
+          company: string | null
+          currency: string | null
+          dedupe_key: string
+          description: string | null
+          eligibility: string
+          employment_type: string | null
+          experience: string | null
+          external_id: string
+          id: string
+          imported_at: string
+          is_expired: boolean
+          last_checked_at: string
+          location: string | null
+          logo_url: string | null
+          pay_unit: string | null
+          published_at: string | null
+          salary_max: number | null
+          salary_min: number | null
+          search: unknown
+          source_id: string
+          source_url: string | null
+          tags: string[]
+          title: string
+          workplace: string
+        }
+        Insert: {
+          apply_url: string
+          company?: string | null
+          currency?: string | null
+          dedupe_key: string
+          description?: string | null
+          eligibility?: string
+          employment_type?: string | null
+          experience?: string | null
+          external_id: string
+          id?: string
+          imported_at?: string
+          is_expired?: boolean
+          last_checked_at?: string
+          location?: string | null
+          logo_url?: string | null
+          pay_unit?: string | null
+          published_at?: string | null
+          salary_max?: number | null
+          salary_min?: number | null
+          search?: unknown
+          source_id: string
+          source_url?: string | null
+          tags?: string[]
+          title: string
+          workplace?: string
+        }
+        Update: {
+          apply_url?: string
+          company?: string | null
+          currency?: string | null
+          dedupe_key?: string
+          description?: string | null
+          eligibility?: string
+          employment_type?: string | null
+          experience?: string | null
+          external_id?: string
+          id?: string
+          imported_at?: string
+          is_expired?: boolean
+          last_checked_at?: string
+          location?: string | null
+          logo_url?: string | null
+          pay_unit?: string | null
+          published_at?: string | null
+          salary_max?: number | null
+          salary_min?: number | null
+          search?: unknown
+          source_id?: string
+          source_url?: string | null
+          tags?: string[]
+          title?: string
+          workplace?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "external_jobs_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "job_sources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       job_categories: {
         Row: {
           active: boolean
@@ -274,6 +366,98 @@ export type Database = {
             columns: ["job_id"]
             isOneToOne: false
             referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      job_sources: {
+        Row: {
+          active_jobs: number
+          created_at: string
+          enabled: boolean
+          id: string
+          last_error: string | null
+          last_run_at: string | null
+          last_status: string
+          last_success_at: string | null
+          name: string
+          terms_url: string | null
+          website: string
+        }
+        Insert: {
+          active_jobs?: number
+          created_at?: string
+          enabled?: boolean
+          id: string
+          last_error?: string | null
+          last_run_at?: string | null
+          last_status?: string
+          last_success_at?: string | null
+          name: string
+          terms_url?: string | null
+          website: string
+        }
+        Update: {
+          active_jobs?: number
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          last_error?: string | null
+          last_run_at?: string | null
+          last_status?: string
+          last_success_at?: string | null
+          name?: string
+          terms_url?: string | null
+          website?: string
+        }
+        Relationships: []
+      }
+      job_sync_logs: {
+        Row: {
+          error: string | null
+          expired: number
+          fetched: number
+          finished_at: string | null
+          id: string
+          inserted: number
+          skipped_duplicates: number
+          source_id: string
+          started_at: string
+          status: string
+          updated: number
+        }
+        Insert: {
+          error?: string | null
+          expired?: number
+          fetched?: number
+          finished_at?: string | null
+          id?: string
+          inserted?: number
+          skipped_duplicates?: number
+          source_id: string
+          started_at?: string
+          status: string
+          updated?: number
+        }
+        Update: {
+          error?: string | null
+          expired?: number
+          fetched?: number
+          finished_at?: string | null
+          id?: string
+          inserted?: number
+          skipped_duplicates?: number
+          source_id?: string
+          started_at?: string
+          status?: string
+          updated?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "job_sync_logs_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "job_sources"
             referencedColumns: ["id"]
           },
         ]
@@ -439,6 +623,27 @@ export type Database = {
           },
         ]
       }
+      user_job_actions: {
+        Row: {
+          action: string
+          created_at: string
+          listing_id: string
+          user_id: string
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          listing_id: string
+          user_id: string
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          listing_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -472,6 +677,34 @@ export type Database = {
         Args: { _company_id: string; _user_id: string }
         Returns: boolean
       }
+      get_external_listing: {
+        Args: { _id: string }
+        Returns: {
+          apply_url: string
+          company: string
+          currency: string
+          description: string
+          eligibility: string
+          employment_type: string
+          experience: string
+          id: string
+          imported_at: string
+          is_expired: boolean
+          last_checked_at: string
+          location: string
+          logo_url: string
+          pay_unit: string
+          published_at: string
+          salary_max: number
+          salary_min: number
+          source_name: string
+          source_url: string
+          source_website: string
+          tags: string[]
+          title: string
+          workplace: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -480,6 +713,81 @@ export type Database = {
         Returns: boolean
       }
       is_admin: { Args: { _user_id: string }; Returns: boolean }
+      listings_base: {
+        Args: never
+        Returns: {
+          apply_url: string
+          category_slug: string
+          company: string
+          currency: string
+          deadline: string
+          description: string
+          discovered_at: string
+          eligibility: string
+          employment_type: string
+          experience: string
+          kind: string
+          listing_id: string
+          location: string
+          logo_url: string
+          pay_unit: string
+          published_at: string
+          region: string
+          salary_max: number
+          salary_min: number
+          search: unknown
+          slug: string
+          source_name: string
+          source_url: string
+          tags: string[]
+          title: string
+          workplace: string
+        }[]
+      }
+      search_listings: {
+        Args: {
+          _category?: string
+          _currency?: string
+          _days?: number
+          _eligibility?: string
+          _employment_type?: string
+          _experience?: string
+          _kind?: string
+          _limit?: number
+          _min_salary?: number
+          _offset?: number
+          _pay_unit?: string
+          _q?: string
+          _region?: string
+          _sort?: string
+          _workplace?: string
+        }
+        Returns: {
+          apply_url: string
+          company: string
+          currency: string
+          deadline: string
+          discovered_at: string
+          eligibility: string
+          employment_type: string
+          experience: string
+          kind: string
+          listing_id: string
+          location: string
+          logo_url: string
+          pay_unit: string
+          published_at: string
+          region: string
+          salary_max: number
+          salary_min: number
+          slug: string
+          source_name: string
+          tags: string[]
+          title: string
+          total_count: number
+          workplace: string
+        }[]
+      }
     }
     Enums: {
       app_role:

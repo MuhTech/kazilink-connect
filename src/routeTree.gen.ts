@@ -20,6 +20,7 @@ import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticate
 import { Route as JobsSlugRouteImport } from './routes/jobs.$slug'
 import { Route as AuthenticatedEmployerCompaniesRouteImport } from './routes/_authenticated/employer.companies'
 import { Route as AuthenticatedEmployerJobsRouteImport } from './routes/_authenticated/employer.jobs'
+import { Route as ApiPublicSyncJobsRouteImport } from './routes/api/public/sync-jobs'
 import { Route as AuthenticatedEmployerJobsIdApplicantsRouteImport } from './routes/_authenticated/employer.jobs.$id.applicants'
 
 const IndexRoute = IndexRouteImport.update({
@@ -79,6 +80,11 @@ const AuthenticatedEmployerJobsRoute =
     path: '/employer/jobs',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const ApiPublicSyncJobsRoute = ApiPublicSyncJobsRouteImport.update({
+  id: '/api/public/sync-jobs',
+  path: '/api/public/sync-jobs',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedEmployerJobsIdApplicantsRoute =
   AuthenticatedEmployerJobsIdApplicantsRouteImport.update({
     id: '/$id/applicants',
@@ -97,6 +103,7 @@ export interface FileRoutesByFullPath {
   '/jobs/$slug': typeof JobsSlugRoute
   '/employer/companies': typeof AuthenticatedEmployerCompaniesRoute
   '/employer/jobs': typeof AuthenticatedEmployerJobsRouteWithChildren
+  '/api/public/sync-jobs': typeof ApiPublicSyncJobsRoute
   '/employer/jobs/$id/applicants': typeof AuthenticatedEmployerJobsIdApplicantsRoute
 }
 export interface FileRoutesByTo {
@@ -110,6 +117,7 @@ export interface FileRoutesByTo {
   '/jobs/$slug': typeof JobsSlugRoute
   '/employer/companies': typeof AuthenticatedEmployerCompaniesRoute
   '/employer/jobs': typeof AuthenticatedEmployerJobsRouteWithChildren
+  '/api/public/sync-jobs': typeof ApiPublicSyncJobsRoute
   '/employer/jobs/$id/applicants': typeof AuthenticatedEmployerJobsIdApplicantsRoute
 }
 export interface FileRoutesById {
@@ -125,6 +133,7 @@ export interface FileRoutesById {
   '/jobs/$slug': typeof JobsSlugRoute
   '/_authenticated/employer/companies': typeof AuthenticatedEmployerCompaniesRoute
   '/_authenticated/employer/jobs': typeof AuthenticatedEmployerJobsRouteWithChildren
+  '/api/public/sync-jobs': typeof ApiPublicSyncJobsRoute
   '/_authenticated/employer/jobs/$id/applicants': typeof AuthenticatedEmployerJobsIdApplicantsRoute
 }
 export interface FileRouteTypes {
@@ -140,6 +149,7 @@ export interface FileRouteTypes {
     | '/jobs/$slug'
     | '/employer/companies'
     | '/employer/jobs'
+    | '/api/public/sync-jobs'
     | '/employer/jobs/$id/applicants'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -153,6 +163,7 @@ export interface FileRouteTypes {
     | '/jobs/$slug'
     | '/employer/companies'
     | '/employer/jobs'
+    | '/api/public/sync-jobs'
     | '/employer/jobs/$id/applicants'
   id:
     | '__root__'
@@ -167,6 +178,7 @@ export interface FileRouteTypes {
     | '/jobs/$slug'
     | '/_authenticated/employer/companies'
     | '/_authenticated/employer/jobs'
+    | '/api/public/sync-jobs'
     | '/_authenticated/employer/jobs/$id/applicants'
   fileRoutesById: FileRoutesById
 }
@@ -175,6 +187,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   JobsRoute: typeof JobsRouteWithChildren
+  ApiPublicSyncJobsRoute: typeof ApiPublicSyncJobsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -256,6 +269,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedEmployerJobsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/api/public/sync-jobs': {
+      id: '/api/public/sync-jobs'
+      path: '/api/public/sync-jobs'
+      fullPath: '/api/public/sync-jobs'
+      preLoaderRoute: typeof ApiPublicSyncJobsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/employer/jobs/$id/applicants': {
       id: '/_authenticated/employer/jobs/$id/applicants'
       path: '/$id/applicants'
@@ -317,6 +337,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   JobsRoute: JobsRouteWithChildren,
+  ApiPublicSyncJobsRoute: ApiPublicSyncJobsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

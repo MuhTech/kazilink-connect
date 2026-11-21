@@ -8,6 +8,13 @@
       "when": 1795255860597,
       "tag": "0000_tighten_settings_and_logos",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1795256256991,
+      "tag": "0001_job_aggregation",
+      "breakpoints": true
     }
   ]
 }
