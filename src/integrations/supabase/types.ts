@@ -677,6 +677,7 @@ export type Database = {
         Args: { _company_id: string; _user_id: string }
         Returns: boolean
       }
+      discover_jobs: { Args: { _filters?: Json }; Returns: Json }
       get_external_listing: {
         Args: { _id: string }
         Returns: {
@@ -744,6 +745,7 @@ export type Database = {
           workplace: string
         }[]
       }
+      public_job_detail: { Args: { _slug: string }; Returns: Json }
       search_listings: {
         Args: {
           _category?: string
