@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Building2, MapPin, Clock, CalendarClock } from "lucide-react";
 import { useT } from "@/lib/i18n";
 import { toast } from "sonner";
+import { ExternalJobDetail } from "@/components/ExternalJobDetail";
 
 export const Route = createFileRoute("/jobs/$slug")({
   head: () => ({
@@ -25,6 +26,11 @@ export const Route = createFileRoute("/jobs/$slug")({
 
 function JobDetail() {
   const { slug } = Route.useParams();
+  if (slug.startsWith("external-")) return <ExternalJobDetail id={slug.slice(9)} />;
+  return <InternalJobDetail slug={slug} />;
+}
+
+function InternalJobDetail({ slug }: { slug: string }) {
   const { user } = useAuth();
   const nav = useNavigate();
   const qc = useQueryClient();
